@@ -1,0 +1,2 @@
+# DXLibReadUTF8FileTest
+UTF-8のファイルを読み込むDXライブラリプログラム、ソースコードはUTF-8 with BOMエンコーディングのプロジェクト
