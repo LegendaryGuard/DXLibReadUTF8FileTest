@@ -1,0 +1,45 @@
+name: プロジェクトビルド
+on: [push]
+
+jobs:
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set console encoding to Shift-JIS to read japanese characters
+      run: chcp 932
+
+    - name: Download DXライブラリ
+      run: |
+        Invoke-WebRequest -Uri https://dxlib.xsrv.jp/DxLib/DxLib_VC3_24b.zip -OutFile C:\DxLib_VC3_24b.zip
+        Expand-Archive -Path C:\DxLib_VC3_24b.zip -DestinationPath C:\ -Force
+        ren C:\DxLib_VC\�v���W�F�N�g�ɒǉ����ׂ��t�@�C��_VC�p C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用
+    
+    # NOTE: The name of the directory uses Shift-JIS, so, GitHub Actions use UTF-8 and obviously breaks the characters
+
+    - name: Add MSBuild to PATH 
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore NuGet packages
+      run: nuget restore DXReadUTF8File.sln
+
+    - name: Build solution
+      run: msbuild DXReadUTF8File.sln /p:Configuration=Release /p:Platform=x86
+
+    - name: Prepare to be stored
+      run: |
+        copy Release\DXReadUTF8File.exe DXReadUTF8File.exe
+
+    - name: Store artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: DXReadUTF8File_Release_Build-${{ github.run_number }}-${{ github.run_id }}
+        path: |
+          EnemyList.txt
+          DXReadUTF8File.exe
+        if-no-files-found: error
+        # retention-days: 5

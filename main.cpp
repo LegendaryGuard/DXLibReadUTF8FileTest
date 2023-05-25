@@ -81,7 +81,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     char buf[256];
     Enemy Enemy[62];
 
-    // skip the main header
+    // skip the first line of the text file
     for (int j = 0; j < 10; j++) fscanf(fi, u8"%s", buf);
 
     for (int i = 0; i < 62; i++) {
@@ -118,7 +118,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     fclose(fi);
 
-    // Main game loop
+
+    /**********************/
+    /** メインゲームループ **/
+    /**********************/
     while (ProcessMessage() != -1 && ClearDrawScreen() != -1) {
         // Draw enemy data on the screen
         for (int i = 0; i < 62; i++) {
